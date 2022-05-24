@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[36]:
+
+
+from sklearn.linear_model import LinearRegression
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+
+
+# In[77]:
+
+
+data = pd.read_csv(r'house_pricing_data.csv')
+
+
+# In[78]:
+
+
+data.head()
+print(data.date)
+
+
+# In[11]:
+
+
+data.describe()
+
+
+# In[40]:
+
+
+data.corr()
+
+
+# In[72]:
+
+
+data.drop(['id',"zipcode"],axis=1)
+
+
+# In[73]:
+
+
+labels = data['price']
+conv_dates = [1 if values == 2014 else 0 for values in data.date ]
+data['date'] = conv_dates
+train1 = data.drop(['price'],axis=1)
+
+
+# In[74]:
+
+
+x_train , x_test , y_train , y_test = train_test_split(train1 , labels , test_size = 0.20)
+reg = LinearRegression().fit(x_train,y_train)
+
+
+# In[80]:
+
+
+y_pred = reg.predict(x_test)
+
+
+# In[82]:
+
+
+print(metrics.mean_absolute_error(y_test, y_pred))
+print(metrics.mean_squared_error(y_test, y_pred))
+print(np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+
